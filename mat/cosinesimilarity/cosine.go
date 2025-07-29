@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math"
 
-	"learn/utils"
+	"learn/mat/utils"
 
 	"gonum.org/v1/gonum/mat"
 )
