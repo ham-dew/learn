@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"math"
 
 	"gonum.org/v1/gonum/mat"
 )
@@ -45,4 +46,32 @@ func Dot(a, b *mat.Dense) (res *mat.Dense, err error) {
 	res.Mul(a, b)
 
 	return res, nil
+}
+
+func EuclideanDistance(p1, p2 mat.Vector) (float64, error) {
+	if p1.Len() != p2.Len() {
+		return -1, fmt.Errorf("mismatched dimensions")
+	}
+
+	total := 0.0
+	for i := range p1.Len() {
+		total += math.Pow(p1.AtVec(i)-p2.AtVec(i), 2)
+	}
+
+	return math.Sqrt(total), nil
+}
+
+// slice 에 동일한 함수가 있으나 편의상 추가
+func MinIndex(arr []float64) int {
+	idx := 0
+	min := math.MaxFloat64
+
+	for i, v := range arr {
+		if v < min {
+			min = v
+			idx = i
+		}
+	}
+
+	return idx
 }
