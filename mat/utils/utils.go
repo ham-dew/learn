@@ -49,13 +49,15 @@ func Dot(a, b *mat.Dense) (res *mat.Dense, err error) {
 }
 
 func EuclideanDistance(p1, p2 mat.Vector) (float64, error) {
-	if p1.Len() != p2.Len() {
+	p1len := p1.Len()
+	if p1len != p2.Len() {
 		return -1, fmt.Errorf("mismatched dimensions")
 	}
 
 	total := 0.0
-	for i := range p1.Len() {
-		total += math.Pow(p1.AtVec(i)-p2.AtVec(i), 2)
+	for i := range p1len {
+		diff := p1.AtVec(i) - p2.AtVec(i)
+		total += diff * diff
 	}
 
 	return math.Sqrt(total), nil
@@ -74,4 +76,22 @@ func MinIndex(arr []float64) int {
 	}
 
 	return idx
+}
+
+// slice 에 동일한 함수가 있으나 편의상 추가
+func Transpose(source [][]float64) [][]float64 {
+	c := len(source)
+
+	res := make([][]float64, len(source[0]))
+	for i := range res {
+		res[i] = make([]float64, c)
+	}
+
+	for i, row := range source {
+		for j, col := range row {
+			res[j][i] = col
+		}
+	}
+
+	return res
 }
