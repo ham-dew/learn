@@ -13,14 +13,20 @@ type Kmeans struct {
 	Data            [][]float64
 	Labels          []int
 	Representatives [][]float64
+	BestIter        int
 
+	max_iter   int
 	clusterNum int
 	rand       *rand.Rand
 }
 
-func New(clusters int, rand *rand.Rand) *Kmeans {
+func New(clusters, max_iter int, rand *rand.Rand) *Kmeans {
+	if max_iter < 1 {
+		max_iter = 100
+	}
 	return &Kmeans{
 		clusterNum: clusters,
+		max_iter:   max_iter,
 		rand:       rand,
 	}
 }
@@ -41,12 +47,14 @@ func (k *Kmeans) Fit(samples [][]float64) error {
 	copy(k.Labels, initLabels)
 
 	// update data
-	for {
+	i := 1
+	for i = 1; i < k.max_iter; i++ {
 		// update Representatives
 		k.Representatives = k.calcRepresentatives()
 		// update Labels
 		newLabel, err := k.calcLabels()
 		if err != nil {
+			k.BestIter = i
 			return fmt.Errorf("kmeans Fit: failed to calc label [%w]", err)
 		}
 
@@ -56,6 +64,7 @@ func (k *Kmeans) Fit(samples [][]float64) error {
 		}
 		k.Labels = newLabel
 	}
+	k.BestIter = i
 
 	return nil
 }
@@ -81,7 +90,7 @@ func (k *Kmeans) initRepresentatives() (res [][]float64) {
 }
 
 func (k *Kmeans) calcRepresentatives() (newRepresentatives [][]float64) {
-	for i := 0; i < len(k.Representatives); i++ {
+	for i := range k.clusterNum {
 		var grouped [][]float64
 		for j, d := range k.Data {
 			if k.Labels[j] == i {
@@ -112,7 +121,6 @@ func (k *Kmeans) calcLabels() (newLabel []int, err error) {
 			if err != nil {
 				return newLabel, fmt.Errorf("calcLabels: failed to calc distance [%w]", err)
 			}
-
 			distances = append(distances, distance)
 		}
 		newLabel = append(newLabel, utils.MinIndex(distances))

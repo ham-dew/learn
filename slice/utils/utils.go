@@ -30,9 +30,9 @@ func Dot(a, b []float64) (float64, error) {
 }
 
 func Transpose(source [][]float64) [][]float64 {
-	c := len(source[0])
+	c := len(source)
 
-	res := make([][]float64, len(source))
+	res := make([][]float64, len(source[0]))
 	for i := range res {
 		res[i] = make([]float64, c)
 	}
@@ -54,7 +54,8 @@ func EuclideanDistance(p1, p2 []float64) (float64, error) {
 	total := 0.0
 
 	for i, x := range p1 {
-		total += math.Pow(x-p2[i], 2)
+		diff := x - p2[i]
+		total += diff * diff
 	}
 
 	return math.Sqrt(total), nil
