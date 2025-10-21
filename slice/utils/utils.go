@@ -61,6 +61,19 @@ func EuclideanDistance(p1, p2 []float64) (float64, error) {
 	return math.Sqrt(total), nil
 }
 
+func ManhattanDistance(p1, p2 []float64) (float64, error) {
+	if len(p1) != len(p2) {
+		return -1, fmt.Errorf("mismatched dimensions")
+	}
+
+	total := 0.0
+	for i, x := range p1 {
+		total += math.Abs(x - p2[i])
+	}
+
+	return total, nil
+}
+
 func MaxIndex(arr []float64) int {
 	idx := 0
 	max := math.Inf(-1)
