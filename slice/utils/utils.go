@@ -75,29 +75,39 @@ func ManhattanDistance(p1, p2 []float64) (float64, error) {
 }
 
 func MaxIndex(arr []float64) int {
-	idx := 0
-	max := math.Inf(-1)
-
-	for i, v := range arr {
-		if v > max {
-			max = v
-			idx = i
-		}
-	}
-
+	idx, _ := MaxIndexValue(arr)
 	return idx
 }
 
-func MinIndex(arr []float64) int {
+func MaxIndexValue(arr []float64) (int, float64) {
 	idx := 0
-	min := math.MaxFloat64
+	maxv := math.Inf(-1)
 
 	for i, v := range arr {
-		if v < min {
-			min = v
+		if v > maxv {
+			maxv = v
 			idx = i
 		}
 	}
 
+	return idx, maxv
+}
+
+func MinIndex(arr []float64) int {
+	idx, _ := MinIndexValue(arr)
 	return idx
+}
+
+func MinIndexValue(arr []float64) (int, float64) {
+	idx := 0
+	minv := math.MaxFloat64
+
+	for i, v := range arr {
+		if v < minv {
+			minv = v
+			idx = i
+		}
+	}
+
+	return idx, minv
 }
